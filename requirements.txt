@@ -1,0 +1,9 @@
+crewai
+crewai-tools
+langchain
+langchain-community
+langchain-groq
+chromadb
+sentence-transformers
+python-dotenv
+requests

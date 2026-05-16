@@ -1,0 +1,22 @@
+India Fintech Market Overview 2025 to 2026
+
+India is the third largest fintech market globally with over 10000 registered fintech startups as of 2025.
+The Indian fintech sector attracted USD 8.9 billion in investments in 2024 and is projected to reach USD 420 billion in transaction value by 2026.
+UPI processed over 18 billion transactions in December 2024 alone, crossing INR 23 lakh crore in monthly value.
+
+Key segments driving growth:
+- Digital lending platforms like Navi, KreditBee, and MoneyView disbursed over 5 crore loans in FY2024.
+- Buy Now Pay Later adoption grew 43 percent year on year driven by Gen Z consumers.
+- Wealth management platforms like Groww and Zerodha crossed 100 million registered users combined.
+- Insurance tech saw 38 percent growth with players like Digit and Acko expanding into rural markets.
+
+Regulatory landscape:
+RBI introduced the Digital Lending Guidelines in 2023 which mandated direct disbursement to borrower accounts.
+SEBI approved the use of AI for investment advisory with mandatory disclosure requirements from 2024.
+The Account Aggregator framework now has over 1.1 billion linked accounts enabling consent based data sharing.
+
+Major players by segment:
+Payments: PhonePe 48 percent UPI market share, Google Pay 37 percent, Paytm declining to 8 percent after RBI action.
+Lending: Bajaj Finance, Navi, KreditBee, Slice, LazyPay.
+Wealth: Zerodha, Groww, Angel One, Upstox.
+Insurance: PolicyBazaar, Acko, Digit Insurance.

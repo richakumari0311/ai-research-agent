@@ -1,0 +1,29 @@
+Credit Risk and Loan Portfolio Intelligence India 2025
+
+Microfinance Sector Stress Indicators:
+The microfinance industry in India reported rising delinquency rates in H2 FY2025.
+Portfolio at Risk greater than 30 days rose to 9.4 percent from 4.8 percent a year ago.
+States with highest stress: Assam, Tamil Nadu, Odisha, and West Bengal showing 12 to 18 percent PAR30.
+Key reason: overleveraging with borrowers holding average 4.2 active loans simultaneously.
+RBI issued advisory to all NBFC-MFIs to cap borrower indebtedness at INR 2 lakh across all lenders.
+
+Credit Card Market Trends:
+Total credit cards in circulation crossed 107 million in March 2025.
+Monthly credit card spends reached INR 1.87 lakh crore in March 2025.
+Delinquency rate on credit cards at 2.8 percent, up from 1.9 percent two years ago.
+HDFC Bank holds 23 percent market share, followed by SBI Cards at 19 percent and ICICI Bank at 17 percent.
+Co-branded cards in partnerships with e-commerce players growing at 55 percent year on year.
+
+Corporate Bond Market:
+Total corporate bond issuance in FY2025 was INR 9.7 lakh crore, a record high.
+AAA rated issuances dominated at 68 percent of total volume.
+Infrastructure and renewable energy companies were the largest issuers.
+Yield spreads on BBB rated bonds compressed by 45 basis points indicating improving risk appetite.
+Foreign portfolio investors now hold 4.2 percent of outstanding corporate bonds, up from 1.8 percent two years ago.
+
+AI in Credit Risk Assessment:
+Leading banks like ICICI, Axis, and Kotak now use ML models for real time credit scoring.
+Alternative data sources used include GST filings, UPI transaction history, and social media signals.
+AI based underwriting reduced loan processing time from 5 days to 4 hours at major banks.
+Default prediction accuracy improved by 34 percent compared to traditional bureau score only models.
+Regulatory requirement: all AI credit models must be explainable and auditable as per RBI circular 2024.

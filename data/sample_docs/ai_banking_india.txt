@@ -1,0 +1,33 @@
+AI in Indian Banking: Real Deployments 2024 to 2025
+
+ICICI Bank AI Initiatives:
+ICICI Bank deployed an AI model called iLens for real time loan underwriting.
+iLens processes over 50 data points including GST history, bank statement analysis, and bureau scores.
+Loan approval time reduced from 3 days to under 2 hours for MSME borrowers.
+The model uses gradient boosting with SHAP values for explainability to meet RBI audit requirements.
+
+Axis Bank Credit Risk AI:
+Axis Bank partnered with Experian to build an alternative credit scoring model for thin file customers.
+The model uses UPI transaction patterns, mobile recharge history, and utility bill payments as features.
+Approval rates for new to credit customers improved by 28 percent without increasing default rates.
+The system processes 200000 applications per month in real time.
+
+State Bank of India Digital Transformation:
+SBI launched YONO platform which now has over 70 million registered users.
+AI chatbot SBI Intelligent Assistant handles 3 million queries per month with 87 percent resolution rate.
+Fraud detection system flags 94 percent of fraudulent transactions before they are processed.
+ML models scan 2 billion transactions monthly for anomaly detection.
+
+RBI Regulatory Technology Initiatives:
+RBI launched a regulatory sandbox for fintech companies to test AI products in a controlled environment.
+Over 80 fintech companies have participated across cohorts focused on lending, payments, and fraud prevention.
+RBI mandated that all AI models used in credit decisioning must be explainable and auditable from April 2024.
+Banks must maintain model risk management frameworks and conduct quarterly model validation reviews.
+
+Key AI Tools Used by Indian Banks:
+- Python with scikit-learn and XGBoost for credit scoring models
+- Apache Kafka for real time transaction streaming
+- AWS SageMaker and Azure ML for model training and deployment
+- Vector databases like Pinecone and ChromaDB for document search
+- LangChain and RAG pipelines for internal knowledge management
+- MLflow for experiment tracking and model versioning
