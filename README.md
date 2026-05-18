@@ -1,18 +1,16 @@
-# AI Research Agent - Multi-Agent RAG System for Fintech Intelligence
+# AI Research Agent
 
-A production-style multi-agent AI system built with CrewAI, RAG, and ChromaDB
-that autonomously researches, retrieves, and generates structured reports on
-Indian fintech and banking topics.
+A production-style multi-agent RAG system that autonomously researches, retrieves, and generates structured reports on Indian fintech and banking topics. Built with CrewAI, ChromaDB, and Groq.
 
 ---
 
-## What This Project Does
+## What It Does
 
-Three specialized AI agents collaborate in sequence to produce a research report:
+Three specialized AI agents collaborate in sequence:
 
-1. Researcher Agent - searches the web for latest news and data using Serper API
-2. RAG Agent - queries a ChromaDB vector store built from internal fintech documents
-3. Writer Agent - synthesizes both sources into a structured markdown report
+1. **Researcher Agent** — searches the web for latest news and data via Serper API
+2. **RAG Agent** — queries a ChromaDB vector store built from internal fintech documents
+3. **Writer Agent** — synthesizes both sources into a structured markdown report
 
 All agents are powered by Groq (LLaMA 3.3 70B) and orchestrated via CrewAI.
 
@@ -22,30 +20,31 @@ All agents are powered by Groq (LLaMA 3.3 70B) and orchestrated via CrewAI.
 
 ```
 User Input (topic)
-      |
-      v
-Researcher Agent  -->  Web Search (Serper API)
-      |
-      v
-RAG Agent  -->  ChromaDB Vector Store (LangChain + HuggingFace Embeddings)
-      |
-      v
-Writer Agent  -->  Structured Report (outputs/report.md)
+       │
+       ▼
+Researcher Agent  ──►  Web Search (Serper API)
+       │
+       ▼
+RAG Agent  ──►  ChromaDB Vector Store (LangChain + HuggingFace Embeddings)
+       │
+       ▼
+Writer Agent  ──►  Structured Report (outputs/report.md)
 ```
 
 ---
 
 ## Tech Stack
 
-| Component | Tool |
-|---|---|
-| Agent Framework | CrewAI |
-| LLM | Groq - LLaMA 3.3 70B Versatile |
-| Vector Store | ChromaDB |
-| Embeddings | HuggingFace all-MiniLM-L6-v2 |
-| Document Loaders | LangChain Community |
-| Web Search | Serper API |
-| Language | Python 3.11 |
+| Component         | Tool                          |
+|-------------------|-------------------------------|
+| Agent Framework   | CrewAI                        |
+| LLM               | Groq — LLaMA 3.3 70B Versatile |
+| Vector Store      | ChromaDB (in-memory)          |
+| Embeddings        | HuggingFace all-MiniLM-L6-v2  |
+| Document Loaders  | LangChain Community           |
+| Web Search        | Serper API                    |
+| UI                | Streamlit                     |
+| Language          | Python 3.11                   |
 
 ---
 
@@ -53,45 +52,31 @@ Writer Agent  -->  Structured Report (outputs/report.md)
 
 ```
 ai-research-agent/
-│
-├── app.py                        # Streamlit web UI (main entry for cloud)
-├── main.py                       # CLI entry point
-├── requirements.txt              # Python dependencies
-├── runtime.txt                   # Python version pin → python-3.11
-├── .env                          # API keys (never commit this)
-├── .env.example                  # Template for API keys (commit this)
-├── .gitignore                    # Ignore .env, outputs/, __pycache__, etc.
-├── README.md                     # Project documentation
-│
+├── app.py                   # Streamlit web UI entry point
+├── main.py                  # CLI entry point
+├── requirements.txt
+├── .gitignore
+├── README.md
 ├── data/
-│   └── sample_docs/              # Your domain knowledge base
-│       ├── doc1.txt
-│       ├── doc2.txt
-│       └── ...
-│
+│   └── sample_docs/         # Domain knowledge base (.txt files)
 ├── outputs/
-│   └── report.md                 # Generated report (auto-created at runtime)
-│
+│   └── report.md            # Generated at runtime (gitignored)
 └── src/
     ├── __init__.py
-    │
-    ├── agents.py                 # CrewAI agent definitions (Researcher, RAG, Writer)
-    ├── tasks.py                  # Task definitions with context chaining
-    │
+    ├── agents.py            # CrewAI agent definitions
+    ├── tasks.py             # Task definitions with context chaining
     ├── rag/
     │   ├── __init__.py
-    │   ├── embedder.py           # ChromaDB vector store builder
-    │   └── retriever.py          # Semantic retrieval logic (fixed + cached)
-    │
+    │   ├── embedder.py      # ChromaDB vector store builder
+    │   └── retriever.py     # Semantic retrieval logic
     └── tools/
         ├── __init__.py
-        ├── search_tool.py        # Serper web search wrapper
-        └── rag_tool.py           # CrewAI-compatible RAG tool
+        └── rag_tool.py      # CrewAI-compatible RAG tool
 ```
 
 ---
 
-## Setup and Run
+## Setup
 
 ### 1. Clone the repo
 
@@ -100,7 +85,7 @@ git clone https://github.com/richakumari0311/ai-research-agent.git
 cd ai-research-agent
 ```
 
-### 2. Create virtual environment
+### 2. Create a virtual environment
 
 ```bash
 python3 -m venv venv
@@ -108,7 +93,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Add API keys to .env
+### 3. Add API keys
+
+Create a `.env` file in the project root:
 
 ```
 GROQ_API_KEY=your_groq_api_key
@@ -123,17 +110,24 @@ Get free keys at:
 
 ### 4. Run the agent
 
+**Streamlit UI (recommended):**
+```bash
+streamlit run app.py
+```
+
+**CLI:**
 ```bash
 python main.py "Indian fintech credit risk and AI in banking 2025"
 ```
 
-Report is saved to outputs/report.md
+The report is saved to `outputs/report.md`.
 
 ---
 
-## Sample Output
+## Report Structure
 
-The system generates structured reports with:
+Every generated report includes:
+
 - Executive Summary
 - Key Findings from web research
 - Knowledge Base Insights from RAG retrieval
@@ -149,28 +143,15 @@ The system generates structured reports with:
 - RAG pipeline with semantic chunking and vector retrieval
 - Tool use and agent-tool binding in CrewAI
 - Context chaining between tasks (task output feeds next agent)
-- Rate limit handling with automatic retry and backoff
+- Rate limit handling with automatic retry and exponential backoff
 - Separation of concerns across agents, tasks, tools, and RAG modules
 
 ---
 
-## Why This Matters
+## Limitations
 
-Indian banks and fintech companies are actively building internal RAG
-systems to query regulatory documents, earnings reports, and credit
-policy manuals. This project demonstrates the exact architecture used
-in production at companies like Navi, Zerodha, and ICICI Bank AI teams.
-
-Skills demonstrated: CrewAI, RAG, ChromaDB, LangChain, Groq, multi-agent
-design, tool use, prompt engineering, and Python engineering best practices.
-
----
-
-## Limitations and Known Issues
-
-- Groq free tier has token-per-minute limits; the system retries
-  automatically with exponential backoff only when a 429 is hit
-- ChromaDB is local and in-memory; for production use Pinecone or Qdrant
+- Groq free tier has token-per-minute limits; the system retries automatically with exponential backoff on 429 errors
+- ChromaDB runs in-memory; for production consider Pinecone or Qdrant
 - Report quality depends on Serper search result relevance
 
 ---
@@ -179,14 +160,19 @@ design, tool use, prompt engineering, and Python engineering best practices.
 
 - Add memory across agent runs using CrewAI long-term memory
 - Replace ChromaDB with Pinecone for cloud-native vector storage
-- Add a FastAPI layer to expose the agent as a REST API
+- Expose the agent as a REST API via FastAPI
 - Add FAISS as an alternative retriever for benchmarking
-- Add evaluation metrics for RAG retrieval quality (MRR, NDCG)
+- Add RAG evaluation metrics (MRR, NDCG)
 - Support PDF ingestion for RBI circulars and annual reports
 
 ---
 
 ## Domain
 
-Fintech and BFSI - Indian credit risk, AI in banking, UPI ecosystem,
-regulatory AI (RBI), and lending intelligence.
+Fintech and BFSI — Indian credit risk, AI in banking, UPI ecosystem, regulatory AI (RBI), and lending intelligence.
+
+---
+
+## Skills Demonstrated
+
+CrewAI · RAG · ChromaDB · LangChain · Groq · Multi-agent design · Tool use · Prompt engineering · Python

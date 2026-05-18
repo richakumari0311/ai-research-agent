@@ -1,6 +1,4 @@
 from crewai import Task
-from src.agents import get_researcher_agent, get_rag_agent, get_writer_agent
-
 
 def get_research_task(topic: str, researcher_agent) -> Task:
     task = Task(

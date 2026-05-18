@@ -1,4 +1,3 @@
-import sys
 import time
 import streamlit as st
 from dotenv import load_dotenv
@@ -213,7 +212,7 @@ def run_crew(topic: str):
             return result
         except Exception as e:
             error_msg = str(e).lower()
-            if "rate_limit" in error_msg or "429" in error_msg:
+            if "rate_limit" in error_msg or "429" in error_msg or "ratelimit" in error_msg:
                 time.sleep(60 * attempt)
             else:
                 raise
