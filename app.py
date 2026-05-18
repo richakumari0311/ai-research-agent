@@ -195,6 +195,8 @@ def run_crew(topic: str):
     from src.tasks import get_research_task, get_rag_task, get_writer_task
     from crewai import Crew, Process
 
+    os.makedirs("outputs", exist_ok=True)
+
     build_vector_store()
 
     researcher = get_researcher_agent()
@@ -305,7 +307,8 @@ with col_right:
                         with open("outputs/report.md", "r") as f:
                             st.session_state.report = f.read()
                     except Exception:
-                        st.session_state.report = str(result)
+                            raw = getattr(result, "raw", None) or str(result)
+                            st.session_state.report = raw if raw and raw.strip() != "None" else "No report generated."
 
                     st.session_state.agent_status = {
                         "researcher": "done",
