@@ -4,13 +4,14 @@ from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_chroma import Chroma
 from dotenv import load_dotenv
 import chromadb
+import os
 
 load_dotenv()
 
 DATA_PATH = "data/sample_docs"
+CHROMA_PATH = os.path.join(os.path.dirname(__file__), "../../chroma_db")
 
-# Shared in-memory client so both functions use the same instance
-_chroma_client = chromadb.EphemeralClient()
+_chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 
 
 def get_embedding_function():
@@ -37,28 +38,29 @@ def load_and_split_documents():
 
 
 def build_vector_store():
-    chunks = load_and_split_documents()
+    existing = [c.name for c in _chroma_client.list_collections()]
+    if "research_docs" in existing:
+        print("Vector store already exists, skipping rebuild.")
+        return load_vector_store()
 
+    chunks = load_and_split_documents()
     if not chunks:
-        print("No documents found in data/sample_docs. Add .txt files first.")
+        print("No documents found in data/sample_docs.")
         return None
 
     embedding_fn = get_embedding_function()
-
     vector_store = Chroma.from_documents(
         documents=chunks,
         embedding=embedding_fn,
         client=_chroma_client,
         collection_name="research_docs"
     )
-
     print(f"Vector store built with {len(chunks)} chunks.")
     return vector_store
 
 
 def load_vector_store():
     embedding_fn = get_embedding_function()
-
     vector_store = Chroma(
         client=_chroma_client,
         collection_name="research_docs",
