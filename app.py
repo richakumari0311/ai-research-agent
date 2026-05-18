@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Load API keys from .env or Streamlit secrets
 for key in ("GROQ_API_KEY", "SERPER_API_KEY", "HUGGINGFACE_HUB_TOKEN"):
     if key not in os.environ:
         try:
@@ -14,7 +15,6 @@ for key in ("GROQ_API_KEY", "SERPER_API_KEY", "HUGGINGFACE_HUB_TOKEN"):
 
 st.set_page_config(
     page_title="AI Research Agent",
-    page_icon="assets/icon.png" if False else None,
     layout="wide"
 )
 
@@ -28,9 +28,7 @@ html, body, [class*="css"] {
     color: #e8e8e8;
 }
 
-.stApp {
-    background-color: #0a0a0a;
-}
+.stApp { background-color: #0a0a0a; }
 
 h1, h2, h3 {
     font-family: 'IBM Plex Mono', monospace;
@@ -177,14 +175,9 @@ div[data-testid="stDownloadButton"] button {
     width: 100%;
 }
 
-.stSpinner > div {
-    border-top-color: #00e5a0 !important;
-}
+.stSpinner > div { border-top-color: #00e5a0 !important; }
 
-hr {
-    border-color: #1e1e1e;
-    margin: 1.5rem 0;
-}
+hr { border-color: #1e1e1e; margin: 1.5rem 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -196,7 +189,6 @@ def run_crew(topic: str):
     from crewai import Crew, Process
 
     os.makedirs("outputs", exist_ok=True)
-
     build_vector_store()
 
     researcher = get_researcher_agent()
@@ -214,12 +206,9 @@ def run_crew(topic: str):
         verbose=False
     )
 
-    time.sleep(15)
-
     for attempt in range(1, 4):
         try:
-            result = crew.kickoff()
-            return result
+            return crew.kickoff()
         except Exception as e:
             error_msg = str(e).lower()
             if "rate_limit" in error_msg or "429" in error_msg or "ratelimit" in error_msg:
@@ -228,12 +217,22 @@ def run_crew(topic: str):
                 raise
 
 
+# --- Session state defaults ---
+if "agent_status" not in st.session_state:
+    st.session_state.agent_status = {"researcher": "idle", "rag": "idle", "writer": "idle"}
+if "report" not in st.session_state:
+    st.session_state.report = None
+if "run_time" not in st.session_state:
+    st.session_state.run_time = None
+if "should_run" not in st.session_state:
+    st.session_state.should_run = False
+
+# --- Layout ---
 col_left, col_right = st.columns([1, 2], gap="large")
 
 with col_left:
     st.markdown('<div class="hero-title">AI Research<br/>Agent</div>', unsafe_allow_html=True)
     st.markdown('<div class="hero-sub">Multi-agent RAG system powered by CrewAI + Groq</div>', unsafe_allow_html=True)
-
     st.markdown('<div class="tag">CrewAI</div><div class="tag">RAG</div><div class="tag">ChromaDB</div><div class="tag">Groq</div><div class="tag">LangChain</div>', unsafe_allow_html=True)
 
     st.markdown("<br/>", unsafe_allow_html=True)
@@ -250,24 +249,12 @@ with col_left:
     st.markdown("<hr/>", unsafe_allow_html=True)
     st.markdown("**Agents**")
 
-    if "agent_status" not in st.session_state:
-        st.session_state.agent_status = {
-            "researcher": "idle",
-            "rag": "idle",
-            "writer": "idle"
-        }
-
-    status_icons = {
-        "idle": "○",
-        "running": "◉",
-        "done": "●",
-        "error": "✕"
-    }
+    status_icons = {"idle": "○", "running": "◉", "done": "●", "error": "✕"}
 
     for key, label, role in [
-        ("researcher", "Researcher", "Web search + source collection"),
-        ("rag", "RAG Specialist", "Vector store retrieval"),
-        ("writer", "Report Writer", "Synthesis + report generation")
+        ("researcher", "Researcher",    "Web search + source collection"),
+        ("rag",        "RAG Specialist", "Vector store retrieval"),
+        ("writer",     "Report Writer",  "Synthesis + report generation"),
     ]:
         s = st.session_state.agent_status[key]
         icon = status_icons[s]
@@ -279,54 +266,47 @@ with col_left:
         </div>
         """, unsafe_allow_html=True)
 
-with col_right:
-    if "report" not in st.session_state:
-        st.session_state.report = None
-    if "run_time" not in st.session_state:
-        st.session_state.run_time = None
-
-    if run_btn:
-        if not topic.strip():
+# --- Button click: reset state and trigger run ---
+if run_btn:
+    if not topic.strip():
+        with col_right:
             st.error("Please enter a research topic.")
-        else:
-            st.session_state.report = None
-            st.session_state.agent_status = {
-                "researcher": "running",
-                "rag": "idle",
-                "writer": "idle"
-            }
+    else:
+        st.session_state.report = None
+        st.session_state.run_time = None
+        st.session_state.agent_status = {"researcher": "running", "rag": "idle", "writer": "idle"}
+        st.session_state.should_run = True
+        st.rerun()
 
-            start = time.time()
+# --- Execute crew (runs after rerun, outside col_right so col_right renders fully) ---
+if st.session_state.should_run:
+    st.session_state.should_run = False
 
-            with st.spinner("Agents are working... this takes 2 to 4 minutes on the free tier"):
+    with col_right:
+        start = time.time()
+        with st.spinner("Agents are working… this takes 2–4 minutes on the free tier"):
+            try:
+                result = run_crew(topic.strip())
+                st.session_state.run_time = round(time.time() - start)
+
                 try:
-                    result = run_crew(topic.strip())
-                    st.session_state.run_time = round(time.time() - start)
+                    with open("outputs/report.md", "r") as f:
+                        st.session_state.report = f.read()
+                except Exception:
+                    raw = getattr(result, "raw", None) or str(result)
+                    st.session_state.report = raw if raw and raw.strip() != "None" else "No report generated."
 
-                    try:
-                        with open("outputs/report.md", "r") as f:
-                            st.session_state.report = f.read()
-                    except Exception:
-                            raw = getattr(result, "raw", None) or str(result)
-                            st.session_state.report = raw if raw and raw.strip() != "None" else "No report generated."
+                st.session_state.agent_status = {"researcher": "done", "rag": "done", "writer": "done"}
+                st.rerun()
 
-                    st.session_state.agent_status = {
-                        "researcher": "done",
-                        "rag": "done",
-                        "writer": "done"
-                    }
-                    st.rerun()
+            except Exception as e:
+                st.session_state.agent_status = {"researcher": "error", "rag": "error", "writer": "error"}
+                st.error(f"Error: {str(e)[:300]}")
 
-                except Exception as e:
-                    st.session_state.agent_status = {
-                        "researcher": "error",
-                        "rag": "error",
-                        "writer": "error"
-                    }
-                    st.error(f"Error: {str(e)[:300]}")
-
+# --- Right column: report or placeholder ---
+with col_right:
     if st.session_state.report:
-        run_time = st.session_state.run_time or 0
+        run_time  = st.session_state.run_time or 0
         word_count = len(st.session_state.report.split())
 
         st.markdown(f"""
