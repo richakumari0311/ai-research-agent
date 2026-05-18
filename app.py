@@ -1,8 +1,16 @@
+import os
 import time
 import streamlit as st
 from dotenv import load_dotenv
 
 load_dotenv()
+
+for key in ("GROQ_API_KEY", "SERPER_API_KEY", "HUGGINGFACE_HUB_TOKEN"):
+    if key not in os.environ:
+        try:
+            os.environ[key] = st.secrets[key]
+        except KeyError:
+            pass
 
 st.set_page_config(
     page_title="AI Research Agent",
