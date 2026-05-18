@@ -3,11 +3,14 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from dotenv import load_dotenv
+import chromadb
 
 load_dotenv()
 
-CHROMA_PATH = "chroma_db"
 DATA_PATH = "data/sample_docs"
+
+# Shared in-memory client so both functions use the same instance
+_chroma_client = chromadb.EphemeralClient()
 
 
 def get_embedding_function():
@@ -45,7 +48,8 @@ def build_vector_store():
     vector_store = Chroma.from_documents(
         documents=chunks,
         embedding=embedding_fn,
-        persist_directory=CHROMA_PATH
+        client=_chroma_client,
+        collection_name="research_docs"
     )
 
     print(f"Vector store built with {len(chunks)} chunks.")
@@ -56,7 +60,8 @@ def load_vector_store():
     embedding_fn = get_embedding_function()
 
     vector_store = Chroma(
-        persist_directory=CHROMA_PATH,
+        client=_chroma_client,
+        collection_name="research_docs",
         embedding_function=embedding_fn
     )
     return vector_store
