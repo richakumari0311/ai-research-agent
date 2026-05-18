@@ -37,6 +37,8 @@ frozenlist==1.8.0
 fsspec==2026.4.0
 gitdb==4.0.12
 GitPython==3.1.50
+google-auth==2.53.0
+google-genai==1.65.0
 googleapis-common-protos==1.75.0
 groq==0.37.1
 grpcio==1.80.0
@@ -121,6 +123,8 @@ posthog==5.4.0
 propcache==0.5.2
 protobuf==5.29.6
 pyarrow==24.0.0
+pyasn1==0.6.3
+pyasn1_modules==0.4.2
 pybase64==1.4.3
 pycparser==3.0
 pydantic==2.12.5

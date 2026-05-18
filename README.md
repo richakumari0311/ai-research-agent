@@ -53,22 +53,40 @@ Writer Agent  -->  Structured Report (outputs/report.md)
 
 ```
 ai-research-agent/
-├── main.py                  # Entry point - runs the full crew
-├── requirements.txt
-├── .env                     # API keys (not committed)
+│
+├── app.py                        # Streamlit web UI (main entry for cloud)
+├── main.py                       # CLI entry point
+├── requirements.txt              # Python dependencies
+├── runtime.txt                   # Python version pin → python-3.11
+├── .env                          # API keys (never commit this)
+├── .env.example                  # Template for API keys (commit this)
+├── .gitignore                    # Ignore .env, outputs/, __pycache__, etc.
+├── README.md                     # Project documentation
+│
 ├── data/
-│   └── sample_docs/         # Domain knowledge base (.txt files)
+│   └── sample_docs/              # Your domain knowledge base
+│       ├── doc1.txt
+│       ├── doc2.txt
+│       └── ...
+│
 ├── outputs/
-│   └── report.md            # Generated report
+│   └── report.md                 # Generated report (auto-created at runtime)
+│
 └── src/
-    ├── agents.py            # CrewAI agent definitions
-    ├── tasks.py             # Task definitions with context chaining
+    ├── __init__.py
+    │
+    ├── agents.py                 # CrewAI agent definitions (Researcher, RAG, Writer)
+    ├── tasks.py                  # Task definitions with context chaining
+    │
     ├── rag/
-    │   ├── embedder.py      # ChromaDB vector store builder
-    │   └── retriever.py     # Semantic retrieval logic
+    │   ├── __init__.py
+    │   ├── embedder.py           # ChromaDB vector store builder
+    │   └── retriever.py          # Semantic retrieval logic (fixed + cached)
+    │
     └── tools/
-        ├── search_tool.py   # Serper web search wrapper
-        └── rag_tool.py      # CrewAI-compatible RAG tool
+        ├── __init__.py
+        ├── search_tool.py        # Serper web search wrapper
+        └── rag_tool.py           # CrewAI-compatible RAG tool
 ```
 
 ---
@@ -150,8 +168,8 @@ design, tool use, prompt engineering, and Python engineering best practices.
 
 ## Limitations and Known Issues
 
-- Groq free tier has token-per-minute limits; the system handles this
-  with automatic retry and exponential backoff
+- Groq free tier has token-per-minute limits; the system retries
+  automatically with exponential backoff only when a 429 is hit
 - ChromaDB is local and in-memory; for production use Pinecone or Qdrant
 - Report quality depends on Serper search result relevance
 
