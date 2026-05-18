@@ -7,3 +7,5 @@ outputs/report.md
 .DS_Store
 *.so
 *.dylib
+.streamlit
+secrets.toml
